@@ -134,3 +134,26 @@ then application.html.erb contains html that will wrap around all inner views (â
   end
   ```
   - then pass the method post_params to Post.new(post_params)
+  - add a new method .save inside of create
+  
+  ```
+  @post.save
+  redirect_to @post
+  
+  ```
+  - this will load the show view
+  - add method show that will find the id of the url of that single unique post
+  ```
+  def show
+    @post = Post.find(params[:id]);
+  end
+  ```
+  - then in the /views/posts folder, create show.html.erb
+    ```
+    <h2><%= @post.title %></h2>
+    <p><%= @post.body %></p>
+    ```
+  - 3000/posts/new , then add title and body, click submit.
+  - Url now shows the post id (3000/posts/1)
+  
+  
