@@ -105,3 +105,32 @@ then application.html.erb contains html that will wrap around all inner views (â
 ```
 { "title" => "test title", "body" => "test body" }
 ```
+- go to /config/locales/database.yml
+--> this is where you put the database information so the users inputs can be saved (update as necessary)
+
+- create model to save the posts
+- go to terminal and:
+> rails g model Post
+(singular for model and plural for controller files)
+- this creates also a migration file
+- then run
+> rake db:migrate 
+- this creates the table in the database
+- now we can go back to controller and create our methods
+- go to posts_controller.rb
+  ```
+  def create
+    @post = Post.new(params[:post])
+  end
+  ```
+  - here, 'Post' in capitals represent the model, that needs to have the params passed to it
+  - if we try to insert the post now in the 3000/posts/new, we get an error as we need to also pass the body and title
+  - to fix it, we need to create a private method as we don't want to 'share' this method
+  ```
+  private
+  
+  def post_params
+    params.require(:post).permit(:title, :body)
+  end
+  ```
+  - then pass the method post_params to Post.new(post_params)
