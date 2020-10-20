@@ -74,7 +74,8 @@ then application.html.erb contains html that will wrap around all inner views (â
      - check on browser 3000/posts/new and we can see that header
      - back to the file new.html.erb, add a form:
      
-  ```<%= form_for :post, url: posts_path do |form| %>
+```
+     <%= form_for :post, url: posts_path do |form| %>
      <p>
        <%= form.label :title %><br>
        <%= form.text_field :title %>
@@ -88,13 +89,19 @@ then application.html.erb contains html that will wrap around all inner views (â
      <p>
        <%= form.submit %>
      </p>
-     <% end %>```
-  
+     <% end %>
+```
 - go to post_controller.rb and add 
-``` def create
+
+
+``` 
+    def create
       render plain: params[:post].inspect
     end 
-
+```
 
 - go to 3000/posts/new and insert title and body to see what is happening
-
+- it returns 
+```
+{ "title" => "test title", "body" => "test body" }
+```
