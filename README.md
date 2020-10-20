@@ -57,7 +57,7 @@ then application.html.erb contains html that will wrap around all inner views (â
 - create file about.html.erb in /pages folder and add <h1>About</h1>
 - go to /config/locales/routes.rb and create add underneath the root:  get 'about' => 'pages#about' (this is the GET request for route 3000/about)
 - back to the pages_controller.rb, add in method about: @title = 'About Us';
-- go to about.html.erb and add <%= @title %> inside of <h1> instead of the hard coded word About that was written before, sending data from controller to view much easier
+- go to about.html.erb and add <%= @title %> inside of header instead of the hard coded word About that was written before, sending data from controller to view much easier
 - add @content to pages_controller.rb with the same syntax and add this variable to the about.html.erb, but inside <p></p>
 
 # Back to class PostsController < ApplicationController
