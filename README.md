@@ -42,7 +42,7 @@ Inside that, there is the application_controller, which is core controller. All 
 then application.html.erb contains html that will wrap around all inner views (‘yield’)
 
 
-# class PostsController < ApplicationController
+## class PostsController < ApplicationController
 
 - here, PostController is extending ApplicationController (see the '<' sign)
 - create a method 
@@ -54,7 +54,7 @@ end
 - create a file index.html.erb on /posts folder and create a header Index
 - go to /config/locales/routes.rb and create: root 'posts#index' --> it relates to our posts controller
 
-# class PagesController < ApplicationController
+## class PagesController < ApplicationController
 
 
 > rails g controller pages
@@ -82,7 +82,7 @@ end
 <p><%= @content %></p>
 ```
 
-# Back to class PostsController < ApplicationController
+## class PostsController < ApplicationController
 
 - because we need a lot of methods in posts, like show, add, destroy:
   - go to /config/locales/routes.rb
@@ -241,7 +241,7 @@ root 'posts#index', as: 'home'
  <%= form.submit({:class => 'btn btn-primary'}) %>
  ```
  
- # post.rb
+## post.rb
  
  - go to post.rb
  - we need to validate, so it can throw errors if fields are not complete
@@ -251,12 +251,12 @@ root 'posts#index', as: 'home'
                       length: {minimum: 5}
  end
  ```
- # post_controller.rb
+## post_controller.rb
  - go to post_controller.rb
  - change the code in method create to:
  ```
  def create
-    @post = Post.bew(post_params)
+    @post = Post.new(post_params)
   
     if(@post.save)
       redirect_to @post
@@ -273,8 +273,7 @@ root 'posts#index', as: 'home'
  ```
  
  
- 
- # new.html.erb
+ ## new.html.erb
  - go to new.html.erb
  - insert 'if statement' underneath the form_for so code above can work on the page, so it throws error 
 ```
@@ -285,7 +284,7 @@ root 'posts#index', as: 'home'
 
 ```
 
-# index.html.erb
+## index.html.erb
 
 - wrap post title, body and button in a div class, add a link to enable to read more about the post
 ```
@@ -298,3 +297,80 @@ root 'posts#index', as: 'home'
   </div>
 <% end %>  
 ```
+## show.html.erb
+
+- go to show.html.erb
+- we will add an 'Edit' button to the posts underneath the body like so:
+```
+<hr>
+<%= link_to "Edit", edit_post_path(@post), :class => 'btn btn-default' %>
+
+```
+
+## post_controller.rb
+- go to post_controller.rb to create method edit:
+```
+def edit
+  @post = Post.find(params[:id]);
+end
+```
+- here, we want to get the individual post just like in the show page
+- then we need to create a file edit.html.erb in /views/posts
+
+## edit.html.erb
+- in this created file (pretty much the same code as in new.html.erb), but change the path to post_path(@post) and define method
+```
+<%= form_for :post, url: post_path(@post), method: :patch do |form| %>
+     <% if @post.errors.any? %>
+       <% @post.errors.full_messages.each do |msg| %>
+       <div class='alert alert-danger'> <%= msg %> </div>]
+     <% end >
+     <p>
+       <%= form.label :title %><br>
+       <%= form.text_field (:title, {:class => 'form_control'}) %>
+     </p>
+ 
+     <p>
+       <%= form.label :body %><br>
+       <%= form.text_area (:body, { :class => 'form_control'}) %>
+     </p>
+ 
+     <p>
+       <%= form.submit({ :class => 'btn btn-primary'}) %>
+     </p>
+     <% end %>
+```
+## post_controller.rb
+- after changing the edit.html.erb, we need to go back to post_controller.rb
+- we need to create the method 'update' so the code in edit.html.erb works
+```
+def update
+  @post = Post.find(params[:id]);
+  if(@post.update(post_params))
+      redirect_to @post
+    else
+      render 'edit'
+    end
+end
+```
+- we want also to create a 'destroy' method to be able to delete the post
+```
+def destroy
+  @post = Post.find(params[:id]);
+  @post.destroy
+  
+  redirect_to posts_path
+end
+
+```
+- so that this works, we need to go to show.html.erb
+
+## show.html.erb
+- we need to create a button for deleting in this page underneath the 'edit' button:
+```
+<%= link_to "Delete", post_path(@post), 
+                    :method :delete,
+                    :data {confirm: 'Are you sure?'},
+                    :class => 'btn btn-danger' %>
+```
+# Adding comment functionality
