@@ -56,7 +56,6 @@ end
 
 ## class PagesController < ApplicationController
 
-
 > rails g controller pages
 
 - create a method in the PagesController 
@@ -198,6 +197,7 @@ end
   - now the index page shows the posts
 
 # Styling
+
 - bootstrap cdn
 - get the css link
 - go to views/layout/application.html.erb
@@ -252,6 +252,7 @@ root 'posts#index', as: 'home'
  end
  ```
 ## post_controller.rb
+
  - go to post_controller.rb
  - change the code in method create to:
  ```
@@ -274,6 +275,7 @@ root 'posts#index', as: 'home'
  
  
  ## new.html.erb
+ 
  - go to new.html.erb
  - insert 'if statement' underneath the form_for so code above can work on the page, so it throws error 
 ```
@@ -308,6 +310,7 @@ root 'posts#index', as: 'home'
 ```
 
 ## post_controller.rb
+
 - go to post_controller.rb to create method edit:
 ```
 def edit
@@ -318,6 +321,7 @@ end
 - then we need to create a file edit.html.erb in /views/posts
 
 ## edit.html.erb
+
 - in this created file (pretty much the same code as in new.html.erb), but change the path to post_path(@post) and define method
 ```
 <%= form_for :post, url: post_path(@post), method: :patch do |form| %>
@@ -341,6 +345,7 @@ end
      <% end %>
 ```
 ## post_controller.rb
+
 - after changing the edit.html.erb, we need to go back to post_controller.rb
 - we need to create the method 'update' so the code in edit.html.erb works
 ```
@@ -366,6 +371,7 @@ end
 - so that this works, we need to go to show.html.erb
 
 ## show.html.erb
+
 - we need to create a button for deleting in this page underneath the 'edit' button:
 ```
 <%= link_to "Delete", post_path(@post), 
@@ -401,5 +407,46 @@ has_many :comments
 ```
 ## config/locales/routes.rb
 
-- we need to create a route here as well
+- we need to create a route here as well, that will be inside resources :posts as we want the relationship between them
+
+```
+resources :posts do
+  resources: comments
+end
+```
+- run on the terminal
+
+> rake routes
+
+- and then
+
+> rails g controller Comments
+
+## show.hrml.erb
+
+- we will now enable the commenting function
+- underneath the codes we already got, insert:
+```
+<hr>
+<h3>Add Comment</h3>
+<%= form_for([@post, @post.comments.build]) do |form| %>
+     <p>
+       <%= form.label :username %><br>
+       <%= form.text_field (:username, {:class => 'form_control'}) %>
+     </p>
+ 
+     <p>
+       <%= form.label :body %><br>
+       <%= form.text_area (:body, { :class => 'form_control'}) %>
+     </p>
+ 
+     <p>
+       <%= form.submit({ :class => 'btn btn-primary'}) %>
+     </p>
+     <% end %>
+```
+
+## class CommentsController < ApplicationController
+
+- we need to define a method to create the comment
 
