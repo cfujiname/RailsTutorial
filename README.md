@@ -152,7 +152,9 @@ end
   - if we try to insert the post now in the 3000/posts/new, we get an error as we need to also pass the body and title
   - to fix it, we need to create a private method as we don't want to 'share' this method
   ```
-  private post_params
+  private 
+  
+  def post_params
     params.require(:post).permit(:title, :body)
   end
   ```
@@ -455,7 +457,22 @@ def create
   redirect_to post_path(@post)
 end
 
-private comment_params
+private 
+
+def comment_params
   params.require(:comment).permit(:username, :body)
 end
+```
+## show.html.erb
+
+- we will insert a code here to be able to show the comments, underneath 'delete' and <hr>:
+
+```
+<h3>Comments</h3>
+
+<% @post.comments.each do |comment| %>
+  <div clas='well'
+  <p> <strong> <%= comment.username %> </strong>: <%= comment.body %> </p>
+  </div>
+<% end %>
 ```
