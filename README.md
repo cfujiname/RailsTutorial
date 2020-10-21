@@ -152,9 +152,7 @@ end
   - if we try to insert the post now in the 3000/posts/new, we get an error as we need to also pass the body and title
   - to fix it, we need to create a private method as we don't want to 'share' this method
   ```
-  private
-  
-  def post_params
+  private post_params
     params.require(:post).permit(:title, :body)
   end
   ```
