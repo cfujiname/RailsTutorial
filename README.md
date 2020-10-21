@@ -452,7 +452,7 @@ end
 
 ```
 def create
-  @post = Post.find(params[:id])
+  @post = Post.find(params[:post_id])
   @comment = @post.comments.create(comment_params)
   redirect_to post_path(@post)
 end
@@ -463,9 +463,10 @@ def comment_params
   params.require(:comment).permit(:username, :body)
 end
 ```
-## show.html.erb
+## \_comments.html.erb and \_form.html.erb
 
-- we will insert a code here to be able to show the comments, underneath 'delete' and <hr>:
+- create a file \_comments.html.erb and \_form.html.erb in views/comments - with underscore because they are partials (Partial allows separation of the layout code out into a file which will be reused throughout the layout and/or multiple other layouts. For example, you might have a login form that you want to display on 10 different pages on your site)
+- we will insert a code here to be able to show the comments:
 
 ```
 <h3>Comments</h3>
