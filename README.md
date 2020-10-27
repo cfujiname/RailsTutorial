@@ -477,3 +477,130 @@ end
   </div>
 <% end %>
 ```
+
+
+
+
+
+## Image processing using Active_Storage and AWS S3 for profile photo
+
+# GEMFILE 
+
+ - gem 'image_processing'
+ - gem 'aws-sdk-s3', require: false
+ - gem 'active_storage_validations'
+ 
+ > bundle install
+ 
+ > rails active_storage:install
+ 
+ ## Migrations
+ 
+ - check if catabase is corrent and then setup and migrate
+ 
+ ## class User < ApplicationRecord
+ 
+ - underneath the devise modules, add
+ ```
+  has_one_attached :profile_picture, dependent :destroy
+  validates :profile_picture, content_type: [:png, :jpg, :jpeg]
+  
+ ```
+ 
+ ## routes.rb
+ 
+ - underneath resources :users
+ - this expects to have a user id coupled to it. To check, use rake routes | grep users
+ 
+ ```
+ member do
+  delete 'delete_image/:image_id', action: 'delete_image', as: 'delete_image'
+ end
+ ```
+ ## users_controller.rb
+ 
+ - add the method to the controller
+ 
+ ```
+ def delete_image
+  image = ActiveStorage::Attachment.find(params[:image_id])
+  if current_user == image.record
+    image.purge
+    redirect_back(fallback_location: request.referer)
+  else
+    redirect_to root_url, notice: 'Don't know what this does'
+  end
+ end
+ ```
+ - this basically looks into the storage to see if there is an image attached to the user, then the action can be perfomed
+   - the line current_user == image.record is to make sure current user can only delete his own, as it is coupled to his id 
+ - add :profile_picture to the user_params method to enable the user to upload the picture
+ 
+ ## views (user profile)
+ 
+ - add the following to be able to upload picture
+ 
+ ```
+ <div class="form-group">
+   <% if user.profile_picture.attached? && user.profile_picture.representable? %>
+   <%= image_tag user.profile_picture.variant(resize '100x100').processed %>
+    <div class="upload-hider-labels">
+    <%= link_to '#', class: 'replace_upload' do %>
+      Replace Profile Photo
+    <% end %>
+    <span class='separator-bar'>|</span>
+      <%= link_to 'Remove Photo without replacing',
+      delete_image_user_url(image_id: user.profile_picture.id),
+      method: :delete,
+      data: { confirm: 'Are you sure?' },
+      class: 'remove-upload' 
+        %>
+    </div>
+    <% else %>
+    <div class='profile-picture no-profile-picture'></div>
+    <% end %>
+    
+    <div class="upload-hider-fields">
+      <%= form.file_field :profile_picture, class: 'form-control' %>
+    </div>
+ </div>  
+   
+ ```
+## show.html.erb for users
+
+- change the code to show image
+
+## AWS S3
+- create bucket
+- create policy with following permissions:
+ s3:ListBucket
+ s3:PutObject
+ s3:GetObject
+ s3:Delete:Object
+
+- add resources ARN
+  - for the bucket: just paste name of bucket
+  - for objects, choose 'Any'
+- name the policy and click on create
+- create user and click on programmatic access
+- attach the policy to the user, save
+- download the csv provided
+
+## rails credentials:edit
+- insert the aws credentials
+
+## storage.yml
+- uncomment the aws ones and change region and bucket accordingly
+
+## production.rb
+
+- change the config of active_storage for :amazon
+- active_storage uses local as default
+
+--> Before deployment, SSH and install imagemagick because we allow image manipulation such as resizing
+
+
+
+
+ 
+
