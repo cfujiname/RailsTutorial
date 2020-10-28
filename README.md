@@ -5,7 +5,7 @@ Controller: responsible for looking at the url and decide what to load, for talk
 Model: responsible for dealing with Database and API
 
 Views: for user interface ---> similar to ruby and sinatra
------
+
 The ‘app’ folder usually contains all MVC folders .
 Inside that, there is the application_controller, which is core controller. All other controllers will be extended from this one
 then application.html.erb contains html that will wrap around all inner views (‘yield’)
