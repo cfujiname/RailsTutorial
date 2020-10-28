@@ -1,4 +1,4 @@
-# RailsTutorial for blog
+# Using Rails for creating an application
 
 Controller: responsible for looking at the url and decide what to load, for talking to Model and View
 
@@ -36,7 +36,8 @@ Controller: responsible for looking at the url and decide what to load, for talk
 Model: responsible for dealing with Database and API
 
 Views: for user interface ---> similar to ruby and sinatra
------
+
+
 The ‘app’ folder usually contains all MVC folders .
 Inside that, there is the application_controller, which is core controller. All other controllers will be extended from this one
 then application.html.erb contains html that will wrap around all inner views (‘yield’)
@@ -478,13 +479,28 @@ end
 <% end %>
 ```
 
+# Creating a user with Devise.rb
+
+- to create the User Class, you can install the gem 'devise'
+- then run in your terminal
+ 
+> rails g devise:install
+
+- devise should then create your model, view and controller paths for the user class
+- you can edit to the specification you want to your app, like sending email confirmations and so on
+
+# Configure email functionality and server with devise
+
+- to enable your app to send emails to the users, ensure to confirgure the mailer setting in your 3 environments 
+- in config/initializers/devise.rb -> configure the mailer settings 
+- set up the user_mailer.rb
+- in routes.rb include the devise_for modules you want to use
+- check if all devise modules you want to use in the User Class are correct. If changes need to be done, you need to cfreate a new migration file and migrate again to adjust the database accordingly
 
 
+# Image processing using Active_Storage and AWS S3 
 
-
-## Image processing using Active_Storage and AWS S3 for profile photo
-
-# GEMFILE 
+## GEMFILE 
 
  - gem 'image_processing'
  - gem 'aws-sdk-s3', require: false
@@ -496,7 +512,7 @@ end
  
  ## Migrations
  
- - check if catabase is corrent and then setup and migrate
+ - check if database is corrent and then setup and migrate
  
  ## class User < ApplicationRecord
  
@@ -599,6 +615,20 @@ end
 
 --> Before deployment, SSH and install imagemagick because we allow image manipulation such as resizing
 
+# Profile and Post Photo upload functionality
+
+- install gem 'mini-magick'
+- check that your classes accept the relationships necessary to be able to upload the images
+- make sure you have an upload button in your html.erb files and that the image can be shown
+- minimagick allows you to edit the image as per functionality allowed
+  - in our projecft, we used the _resize_ functionality
+  
+# Friendship functionality
+
+- install gem 'has_friendship'
+- make sure the routes are correctly prepared 
+- check migration files before setting up the database
+- change your views html.erb to the way you want them to be/redirect, etc.
 
 
 
